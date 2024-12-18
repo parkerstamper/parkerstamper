@@ -102,7 +102,7 @@
     var vizElement = divElement.getElementsByTagName('object')[0];
     
     
-    vizElement.style.width = '100%';  
+    vizElement.style.width = '80%';  
     vizElement.style.height = '400px'; 
     
     var scriptElement = document.createElement('script');
@@ -110,43 +110,111 @@
     vizElement.parentNode.insertBefore(scriptElement, vizElement);
 </script>
 
-    
-    
-    
-    
-    
-    <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Occupational Therapy Wordle Game</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to the external CSS file -->
+</head>
+<body>
 
+    <div class="game-container">
+        <h1>Occupational Therapy Wordle Game</h1>
+        <p>Guess the 5-letter word related to Occupational Therapy!</p>
+
+        <!-- Guess Input and Submit Button -->
+        <input type="text" id="guess-input" maxlength="5" placeholder="Enter a 5-letter word">
+        <button id="submit-guess">Submit Guess</button>
+
+        <div id="word-grid"></div>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        const words = ["rehab", "adapt", "train", "touch", "motor", "study", "focus", "craft", "skill"]; // Only 5-letter words
+        const targetWord = words[Math.floor(Math.random() * words.length)]; // Select a random word
+        let attempts = 0;
+        const maxAttempts = 6; // Number of attempts allowed
+
+        const guessInput = document.getElementById("guess-input");
+        const submitButton = document.getElementById("submit-guess");
+        const message = document.getElementById("message");
+        const wordGrid = document.getElementById("word-grid");
+
+        function createGrid() {
+            for (let i = 0; i < maxAttempts; i++) {
+                const row = document.createElement("div");
+                row.classList.add("guess-row");
+                for (let j = 0; j < 5; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("guess-cell");
+                    row.appendChild(cell);
+                }
+                wordGrid.appendChild(row);
+            }
+        }
+
+        function updateGrid(guess, attempt) {
+            const row = wordGrid.children[attempt];
+            for (let i = 0; i < 5; i++) {
+                const cell = row.children[i];
+                const letter = guess[i];
+                if (letter === targetWord[i]) {
+                    cell.style.backgroundColor = "green"; // Correct letter and position
+                } else if (targetWord.includes(letter)) {
+                    cell.style.backgroundColor = "yellow"; // Correct letter, wrong position
+                } else {
+                    cell.style.backgroundColor = "gray"; // Incorrect letter
+                }
+                cell.textContent = letter;
+            }
+        }
+
+        function handleGuess() {
+            const guess = guessInput.value.toLowerCase();
+            if (guess.length !== 5) {
+                message.textContent = "Please enter a 5-letter word!";
+                return;
+            }
+
+            if (!words.includes(guess)) {
+                message.textContent = "Please enter a valid 5-letter word related to Occupational Therapy!";
+                return;
+            }
+
+            if (attempts >= maxAttempts) {
+                message.textContent = "You've used all your attempts! The word was: " + targetWord;
+                return;
+            }
+
+            updateGrid(guess, attempts);
+            attempts++;
+
+            if (guess === targetWord) {
+                message.textContent = "Congratulations! You've guessed the word!";
+            } else if (attempts === maxAttempts) {
+                message.textContent = "Game Over! The word was: " + targetWord;
+            } else {
+                message.textContent = `Attempt ${attempts + 1} of ${maxAttempts}`;
+            }
+
+            guessInput.value = "";
+        }
+
+        submitButton.addEventListener("click", handleGuess);
+        guessInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                handleGuess();
+            }
+        });
+
+        createGrid();
+    </script>
 
 </body>
 </html>
+
+
+
